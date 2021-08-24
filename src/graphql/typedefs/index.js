@@ -1,4 +1,4 @@
-import { gql } from 'apollo-server-express';
+import { gql } from "apollo-server-express";
 
 export const userTypes = gql`
   type User {
@@ -12,6 +12,6 @@ export const userTypes = gql`
   }
 
   extend type Mutation {
-    createUser: Boolean
+    createUser: User!
   }
 `;

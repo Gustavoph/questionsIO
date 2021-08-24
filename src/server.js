@@ -1,18 +1,48 @@
-import { ApolloServer, gql } from 'apollo-server-express';
-import { typeDefs, resolvers } from './graphql';
+import { ApolloServer, gql } from "apollo-server-express";
+import { typeDefs, resolvers } from "./graphql";
+import { createServer } from "http";
+import { execute, subscribe } from "graphql";
+import { SubscriptionServer } from "subscriptions-transport-ws";
+import { makeExecutableSchema } from "@graphql-tools/schema";
+import { PubSub } from "graphql-subscriptions";
 
-
-import express from 'express';
+import express from "express";
 const app = express();
 
-const startApolloServer = async () => {
-  const server = new ApolloServer({ typeDefs, resolvers });
+(async () => {
+  const PORT = 4000;
+  const pubsub = new PubSub();
+  const httpServer = createServer(app);
+  const schema = makeExecutableSchema({ typeDefs, resolvers });
+  const server = new ApolloServer({
+    schema,
+    context: { pubsub },
+  });
+
+  const subscriptionServer = SubscriptionServer.create(
+    {
+      schema,
+      execute,
+      subscribe,
+      onConnect(connectionParams, webSocket, context) {
+        console.log("Connected!");
+      },
+      onDisconnect(webSocket, context) {
+        console.log("Disconnected!");
+      },
+    },
+    { server: httpServer, path: server.graphqlPath }
+  );
 
   await server.start();
-  server.applyMiddleware({ app, path: '/' })
+  server.applyMiddleware({ app, path: "/" });
 
-  await new Promise(resolve => app.listen({ port: 4001 }, resolve));
-  console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`);
-}
-
-startApolloServer(typeDefs, resolvers);
+  httpServer.listen(PORT, () => {
+    console.log(
+      `🚀 Query endpoint ready at http://localhost:${PORT}${server.graphqlPath}`
+    );
+    console.log(
+      `🚀 Subscription endpoint ready at ws://localhost:${PORT}${server.graphqlPath}`
+    );
+  });
+})();
