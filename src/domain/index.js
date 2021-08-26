@@ -1,4 +1,6 @@
 import { gql } from 'apollo-server-express';
+import { loginResolvers } from './login/resolvers';
+import { loginTypes } from './login/typeDefs';
 import { userResolvers } from './user/resolvers';
 import { userTypes } from './user/typeDefs';
 
@@ -30,5 +32,5 @@ const rootResolvers = {
   },
 };
 
-export const typeDefs = [rootTypes, userTypes];
-export const resolvers = [rootResolvers, userResolvers];
+export const typeDefs = [rootTypes, userTypes, loginTypes];
+export const resolvers = [rootResolvers, userResolvers, loginResolvers];

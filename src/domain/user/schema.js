@@ -7,6 +7,10 @@ export const UserSchema = new Schema({
     default: uuidv4,
     required: true,
   },
+  avatar: {
+    type: String,
+    required: false,
+  },
   userName: {
     type: String,
     required: true,

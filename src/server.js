@@ -9,7 +9,7 @@ import { typeDefs, resolvers } from './domain';
 import { db } from './database';
 
 (async () => {
-  const PORT = 4000;
+  const PORT = 4003;
   const pubsub = new PubSub();
   const app = express();
   const httpServer = createServer(app);
@@ -21,7 +21,13 @@ import { db } from './database';
 
   const server = new ApolloServer({
     schema,
-    context: { pubsub },
+    cors: {
+      " Access-Control-Allow-Origin": "https://studio.apollographql.com",
+      "Access-Control-Allow-Credentials": true,
+    }
+    context: ({ req, res }) => {
+      return { res, pubsub };
+    },
   });
   await server.start();
   server.applyMiddleware({ app });
