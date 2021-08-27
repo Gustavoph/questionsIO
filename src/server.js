@@ -21,10 +21,6 @@ import { db } from './database';
 
   const server = new ApolloServer({
     schema,
-    cors: {
-      " Access-Control-Allow-Origin": "https://studio.apollographql.com",
-      "Access-Control-Allow-Credentials": true,
-    }
     context: ({ req, res }) => {
       return { res, pubsub };
     },
