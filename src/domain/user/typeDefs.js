@@ -14,10 +14,12 @@ export const userTypes = gql`
   }
 
   extend type Query {
+    getUser(id: ID!): User!
     getUsers: [User!]!
   }
 
   extend type Mutation {
     createUser(data: InputCreateUser): User!
+    deleteUser(id: ID): User!
   }
 `;

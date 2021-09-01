@@ -4,6 +4,7 @@ import { verifyEmailExists } from '../utils/verifyEmail';
 import { generatePasswordHash } from '../utils/HashPassword';
 
 export const createUserFn = async (_, { data }, { pubsub }) => {
+  console.log(pubsub);
   await verifyInput(data);
   await verifyEmailExists(UserModel, data.email);
 

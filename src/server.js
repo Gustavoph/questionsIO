@@ -1,12 +1,14 @@
 import express from 'express';
 import { createServer } from 'http';
 import { execute, subscribe } from 'graphql';
+import { context } from './middleware';
 import { PubSub } from 'graphql-subscriptions';
 import { ApolloServer, gql } from 'apollo-server-express';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import { SubscriptionServer } from 'subscriptions-transport-ws';
 import { typeDefs, resolvers } from './domain';
 import { db } from './database';
+
 
 (async () => {
   const PORT = 4003;
@@ -19,14 +21,16 @@ import { db } from './database';
 
   const schema = makeExecutableSchema({ typeDefs, resolvers });
 
+  const corsOptions = {
+    origin: "https://studio.apollographql.com",
+    credentials: true
+  };
   const server = new ApolloServer({
     schema,
-    context: ({ req, res }) => {
-      return { res, pubsub };
-    },
+    context: context({req, res}, pubsub)
   });
   await server.start();
-  server.applyMiddleware({ app });
+  server.applyMiddleware({ app, cors: corsOptions });
 
   SubscriptionServer.create(
     { schema, execute, subscribe, onConnect: () => pubsub },

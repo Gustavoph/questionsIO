@@ -5,7 +5,7 @@ import { verifyPassword } from '../utils/verifyPassword';
 
 export const loginFn = async (_, { data }, { res }) => {
   const { email, password } = data;
-
+  console.log(res);
   const response = await UserModel.find({ email: email });
   const user = response[0];
 
@@ -18,12 +18,14 @@ export const loginFn = async (_, { data }, { res }) => {
   const token = await createJwtToken(user._id);
 
   res.cookie('jwtToken', token, {
-    secure: true, // Rede segura - Https
-    httpOnly: true, // Não deve ser acessado via código
-    maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+    secure: true,
+    httpOnly: false,
+    maxAge: 1000 * 60 * 60 * 24 * 7,
     path: '/',
-    sameSite: 'none', // strict lax none
+    sameSite: 'None',
   });
+
+  // res.clearCookie('jwtToken')
 
   return {
     userId: user._id,
