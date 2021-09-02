@@ -5,7 +5,7 @@ import { getUserFn } from './controllers/getUserFn';
 import { getUsersFn } from './controllers/getUsersFn';
 import { createUserFn } from './controllers/createUserFn';
 import { deleteUserFn } from './controllers/deleteUserFn';
-
+import { updateUserFn } from './controllers/updateUserFn';
 
 export const userResolvers = {
   Query: {
@@ -15,5 +15,6 @@ export const userResolvers = {
   Mutation: {
     createUser: createUserFn,
     deleteUser: deleteUserFn,
+    updateUser: updateUserFn,
   },
 };
