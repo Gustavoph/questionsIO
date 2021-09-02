@@ -2,9 +2,9 @@ import { UserModel } from '../../../database';
 import { verifyInput } from '../utils/verifyInput';
 import { verifyEmailExists } from '../utils/verifyEmail';
 import { generatePasswordHash } from '../utils/HashPassword';
+import { pubsub } from '../../../server';
 
-export const createUserFn = async (_, { data }, { pubsub }) => {
-  console.log(pubsub);
+export const createUserFn = async (_, { data }) => {
   await verifyInput(data);
   await verifyEmailExists(UserModel, data.email);
 

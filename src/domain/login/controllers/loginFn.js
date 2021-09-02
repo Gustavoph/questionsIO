@@ -5,7 +5,6 @@ import { verifyPassword } from '../utils/verifyPassword';
 
 export const loginFn = async (_, { data }, { res }) => {
   const { email, password } = data;
-  console.log(res);
   const response = await UserModel.find({ email: email });
   const user = response[0];
 
